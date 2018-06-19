@@ -3,9 +3,9 @@ import numpy as np
 
 class NeuralNetwork():
     """
-        NOTE: Currently support only 1 hidden layer.
+        NOTE: Currently supports only 1 hidden layer.
         layers = (x, y, z)
-        We define a neural network x input | y hidden | z outputs
+        Defines a neural network -> x input | y hidden | z outputs
     """
 
     def __init__(self, layers, learn_rate=0.3):
@@ -39,7 +39,6 @@ class NeuralNetwork():
             np.matmul((hidden_errors * hidden_outs * (1.0 - hidden_outs)),
                       np.transpose(inputs))
 
-    # TODO: FIXXXXXXXXXXXXX
     def query(self, input_list):
         # Converts list to matrix
         inputs = np.array(input_list, ndmin=2).T
@@ -52,6 +51,6 @@ class NeuralNetwork():
 
         return final_outs
 
-    # NOTE: Using Sigmoid, RELU?
+    # NOTE: Using Sigmoid
     def activation(self, x):
         return 1 / (1 + np.exp(-x))

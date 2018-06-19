@@ -19,7 +19,6 @@ def mnist_train():
         print("Starting Training...")
         for i in range(epochs):
             print("Epoch:", i)
-            c = 0
             for record in traning_data:
                 all_values = record.split(',')
                 inputs = (np.asfarray(all_values[1:]) / 255.0 * 0.99) + 0.01
@@ -59,7 +58,7 @@ def mnist_test():
 
 def pre_process_custom_image(path):
     """
-        Extracts the label from the image path '*_1.png'.
+        Extracts the label from the image path '*_1.png', where 1 is the label.
         Reads and flattens the pixels into an array and grayscales the image.
         Reshapes the array into 784 pixels and normalizes them between 0.1-1
     """
@@ -72,10 +71,12 @@ def pre_process_custom_image(path):
 
 def test_custom_image(path):
     correct_label, img_data = pre_process_custom_image(path)
+
     # Show current image being tested.
     img_data_shaped = img_data.reshape((28, 28))
     plt.imshow(img_data_shaped, cmap='Greys', interpolation='None')
     plt.show()
+
     outputs = n.query(img_data)
     label = np.argmax(outputs)
 
@@ -89,10 +90,11 @@ def test_custom_image(path):
 
 mnist_train()
 mnist_test()
-base = './test-images/'
-files = os.listdir(base)
-for f in files:
-    test_custom_image(base + f)
+
+test_images_path = './test-images/'
+
+for f in os.listdir(test_images_path):
+    test_custom_image(test_images_path + f)
 
 # Print overall Network performance
 score = np.asarray(network_score)

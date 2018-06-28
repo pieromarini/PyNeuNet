@@ -3,11 +3,13 @@ import os
 import matplotlib.pyplot as plt
 import scipy.misc
 from neuralnetwork import NeuralNetwork
+import pickle
 
 layers = (784, 200, 10)
 epochs = 2
 learning_rate = 0.2
 network_score = []
+
 
 n = NeuralNetwork(layers, learning_rate)
 
@@ -36,6 +38,10 @@ def mnist_train():
                 targets = np.zeros(layers[-1]) + 0.01
                 targets[int(all_values[0])] = 0.99
                 n.train(inputs, targets)
+
+    with open('./trained-network', 'wb') as f:
+        weights = (n.whi, n.who)
+        pickle.dump(weights, f)
 
 
 def mnist_test():
@@ -86,6 +92,14 @@ def test_custom_image(path):
         network_score.append(0)
 
     print("Correct Label:", correct_label, "| Answer:", label)
+
+
+def predict(image, weights):
+    outputs = n.query_with_weights(image, weights)
+    label = np.argmax(outputs)
+    prob = np.sum(outputs)
+
+    return (label, prob)
 
 
 mnist_train()

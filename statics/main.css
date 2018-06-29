@@ -1,4 +1,17 @@
-#canvasDiv{
+#all{
+    text-align: center;
+    background-color: #fff;
+}
+.canvasDiv{
     border: solid black 1px;
-    width: 100px;
+    width: 150px;
+    margin: auto;
+    background: #FFFFFF;
+}
+#ans{
+    background-color: #000;
+}
+.btn{
+    padding: 5px;
+    margin: 20px;
 }

@@ -1,9 +1,9 @@
 canvas = document.createElement('canvas');
-canvas.setAttribute('width', '100px');
-canvas.setAttribute('height', '100px');
+canvas.setAttribute('width', '150px');
+canvas.setAttribute('height', '150px');
 canvas.setAttribute('id', 'canvas');
 
-var canvasDiv = document.getElementById('canvasDiv');
+var canvasDiv = document.getElementsByClassName('canvasDiv')[0];
 canvasDiv.appendChild(canvas);
 if(typeof G_vmlCanvasManager != 'undefined') {
 	canvas = G_vmlCanvasManager.initElement(canvas);

@@ -1,21 +1,27 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" type="text/css" href="./statics/main.css">
+        <link rel="stylesheet" type="text/css" href="../statics/main.css">
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale = 1">
         <title> Python Neural Network </title>
     </head>
     <body id='all'>
-        <h1>Python - Neural network</h1>
-        <div class="canvasDiv"></div>
-        <button class='btn' type="button">Adivinar</button>
-        <div id='ans' class='canvasDiv'></div>
+        <div class = 'top'>
+            <h1>Python - Neural network</h1>
+            <hr> 
+        </div>
+    
+        <div class='project'>
+            <div class="canvasDiv"></div>
+            <div id='ans' class='canvasDiv'></div>
+        </div>
+        <button class='btn' type="button" onclick="sendNumber()">Guess</button>
         
-        
+      
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
-        <script src="./statics/main.js"></script>
+        <script src="../statics/main.js"></script>
     </body>
 </html>

@@ -3,8 +3,26 @@ canvas.setAttribute('width', '150px');
 canvas.setAttribute('height', '150px');
 canvas.setAttribute('id', 'canvas');
 
+
+
+responsetxt = document.createElement('textarea');
+responsetxt.style.color = '#3DF614';
+responsetxt.style.backgroundColor = '#000000';
+responsetxt.style.height = '150px';
+responsetxt.style.width = '150px';
+responsetxt.style.padding = '0px';
+responsetxt.style.border = '0';
+responsetxt.style.fontSize = '15px';
+responsetxt.readOnly = true;
+
+
 var canvasDiv = document.getElementsByClassName('canvasDiv')[0];
 canvasDiv.appendChild(canvas);
+
+var responseDiv = document.getElementById('ans');
+responseDiv.appendChild(responsetxt);
+
+
 if(typeof G_vmlCanvasManager != 'undefined') {
 	canvas = G_vmlCanvasManager.initElement(canvas);
 }
@@ -66,20 +84,26 @@ function redraw(){
   }
 }
 
-var imgData = context.getImageData(0, 0, context.canvas.width, context.canvas.height)
-console.log(imgData)
-var data = imgData.data
-$.ajax({
-    url: '/predict-digit',
-    data: JSON.stringify(data),
-    contentType: 'application/json; charset=utf-8',
-    type: 'POST',
-    success: function(response){
-        // response['digit']
-        // response['prob']
-    },
-    error: function(e){
-        console.log(e)
-    }
-})
+function sendnumber(){
+    var imgData = context.getImageData(0, 0, context.canvas.width, context.canvas.height)
+    console.log(imgData)
+    var data = imgData.data
+    
+    $.ajax({
+        url: '/predict-digit',
+        data: JSON.stringify(data),
+        contentType: 'application/json; charset=utf-8',
+        type: 'POST',
+        success: function(response){
+            // response['digit']
+            // response['prob']
+        },
+        error: function(e){
+            console.log(e)
+        }
+    })
+    
+    responsetxt.value = 'Your number is: '+ digit + "\\\rand the probabilities are: " + prob;
+}
+
 

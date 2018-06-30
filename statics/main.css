@@ -1,17 +1,40 @@
+@import url('https://fonts.googleapis.com/css?family=Lobster');
 #all{
     text-align: center;
-    background-color: #fff;
+    background-color: #F1E6E6;
+}
+/*----------------------------------------------------------------------TOP*/
+h1{
+    font-family: 'Lobster', cursive;
+}
+hr{
+    width: 100%;
+    margin: auto;
+    border-style: double;
+    color: #526EA7;
+}
+/*----------------------------------------------------------------------MID*/
+.project{
+    margin: auto;
+    padding: 1%;
+    width: 70%;   
 }
 .canvasDiv{
     border: solid black 1px;
     width: 150px;
-    margin: auto;
     background: #FFFFFF;
+    margin: auto;
+    display: inline-block;
+    
 }
 #ans{
     background-color: #000;
+    color: #FFFFFF;
+    padding: 0;
 }
 .btn{
     padding: 5px;
     margin: 20px;
 }
+/*----------------------------------------------------------------------BOT*/
+

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" type="text/css" href="../statics/main.css">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale = 1">
         <title> Python Neural Network </title>
@@ -16,12 +16,12 @@
             <div class="canvasDiv"></div>
             <div id='ans' class='canvasDiv'></div>
         </div>
-        <button class='btn' type="button" onclick="sendNumber()">Guess</button>
+		<button id="guess" class='btn' type="button">Guess</button>
         
       
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
-        <script src="../statics/main.js"></script>
+		<script defer src="{{ url_for('static', filename='main.js') }}"></script>
     </body>
 </html>

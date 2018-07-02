@@ -102,14 +102,14 @@ def predict(image, weights):
     return (label, prob)
 
 
-mnist_train()
-mnist_test()
+# mnist_train()
+# mnist_test()
 
-test_images_path = './test-images/'
+#test_images_path = './test-images/'
 
-for f in os.listdir(test_images_path):
-    test_custom_image(test_images_path + f)
+# for f in os.listdir(test_images_path):
+#    test_custom_image(test_images_path + f)
 
 # Print overall Network performance
-score = np.asarray(network_score)
-print("Performance:", score.sum() / score.size)
+#score = np.asarray(network_score)
+#print("Performance:", score.sum() / score.size)

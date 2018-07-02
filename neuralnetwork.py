@@ -51,16 +51,17 @@ class NeuralNetwork():
 
         return final_outs
 
-    def query_with_weigths(self, input_list, weights):
+    def query_with_weights(self, input_list, weights):
         # Converts list to matrix
-        whi = weights[0]
-        who = weights[1]
+        wi = weights[0]
+        wo = weights[1]
         inputs = np.array(input_list, ndmin=2).T
 
-        hidden_inps = np.matmul(whi, inputs)
+        print(wi)
+        hidden_inps = np.matmul(wi, inputs)
         hidden_outs = self.activation(hidden_inps)
 
-        final_inputs = np.matmul(who, hidden_outs)
+        final_inputs = np.matmul(wo, hidden_outs)
         final_outs = self.activation(final_inputs)
 
         return final_outs

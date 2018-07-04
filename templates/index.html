@@ -1,27 +1,41 @@
 <!DOCTYPE html>
 <html>
-    <head>
-		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale = 1">
-        <title> Python Neural Network </title>
-    </head>
-    <body id='all'>
-        <div class = 'top'>
-            <h1>Python - Neural network</h1>
-            <hr> 
-        </div>
-    
-        <div class='project'>
-            <div class="canvasDiv"></div>
-            <div id='ans' class='canvasDiv'></div>
-        </div>
-		<button id="guess" class='btn' type="button">Guess</button>
-        
-      
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js"
-        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-        crossorigin="anonymous"></script>
-		<script defer src="{{ url_for('static', filename='main.js') }}"></script>
-    </body>
+	<head>
+		<link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="normalize.css") }}">
+		<link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="main.css") }}">
+		<link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="drawingBoard.min.css") }}">
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title> Digit Recognizer with Python </title>
+	</head>
+	<body>
+
+		<section>
+			<div class="container">
+				<div class="row center-align">
+
+					<div class = 'top'>
+						<h1>Digit Recognizer with Python</h1>
+					</div>
+
+					<div class="container" style="display: flex; width: 100%; justify-content: center">
+						<div class="board" id="default-board"></div>
+						<div class="result">
+							<span id="result">Prediction will be displayed here</span>
+						</div>
+					</div>
+				</div>
+				<div style="display: flex; justify-content: center; width: 100%;">
+					<button id="guess" class="waves-effect waves-light btn">Predict</button>
+				</div>
+			</div>
+			<footer style="text-align: center;">
+			</footer>
+		</section>
+
+		<script defer src="https://code.jquery.com/jquery-3.3.1.min.js" 
+				crossorigin="anonymous"></script>
+		<script defer src="{{ url_for("static", filename="drawingBoard.min.js") }}"></script>
+		<script defer src="{{ url_for("static", filename="main.js") }}"></script>
+	</body>
 </html>

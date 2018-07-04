@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.special import expit
 
 
 class NeuralNetwork():
@@ -57,7 +58,6 @@ class NeuralNetwork():
         wo = weights[1]
         inputs = np.array(input_list, ndmin=2).T
 
-        print(wi)
         hidden_inps = np.matmul(wi, inputs)
         hidden_outs = self.activation(hidden_inps)
 
@@ -68,4 +68,4 @@ class NeuralNetwork():
 
     # NOTE: Using Sigmoid
     def activation(self, x):
-        return 1 / (1 + np.exp(-x))
+        return expit(x)

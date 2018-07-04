@@ -27,9 +27,9 @@ def digit():
             weights = pickle.load(f)
 
         digit, prob = predict(img, weights)
-        data = {'digit': digit, 'prob': prob}
+        data = {'digit': digit.item(), 'prob': prob.item()}
         return jsonify(data)
 
 
 if __name__ == '__main__':
-    app.run(host=HOST, port=PORT)
+    app.run(host=HOST, port=PORT, debug=True)

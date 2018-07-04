@@ -6,7 +6,7 @@ from neuralnetwork import NeuralNetwork
 import pickle
 
 layers = (784, 200, 10)
-epochs = 2
+epochs = 4
 learning_rate = 0.2
 network_score = []
 
@@ -62,6 +62,28 @@ def mnist_test():
             # print("Correct:", correct_label, "| Answer:", label)
 
 
+def mnist_test_with_weights():
+
+    with open('./trained-network', 'rb') as f:
+        weights = pickle.load(f)
+
+    with open('./mnist_test.csv', 'r') as f:
+        test_data = f.readlines()
+        for record in test_data:
+            all_values = record.split(',')
+            correct_label = int(all_values[0])
+            inputs = (np.asfarray(all_values[1:]) / 255.0 * 0.99) + 0.01
+            outputs = n.query_with_weights(inputs, weights)
+            label = np.argmax(outputs)
+
+            if label == correct_label:
+                network_score.append(1)
+            else:
+                network_score.append(0)
+
+            # print("Correct:", correct_label, "| Answer:", label)
+
+
 def pre_process_custom_image(path):
     """
         Extracts the label from the image path '*_1.png', where 1 is the label.
@@ -95,21 +117,36 @@ def test_custom_image(path):
 
 
 def predict(image, weights):
-    outputs = n.query_with_weights(image, weights)
-    label = np.argmax(outputs)
-    prob = np.sum(outputs)
+    # Normalizing values.
+    image_arr = np.asarray(image)
+    img_normalized = 255.0 - image_arr.reshape(784)
+    img_normalized = (img_normalized / 255.0 * 0.99) + 0.01
 
-    return (label, prob)
+    outputs = n.query_with_weights(img_normalized, weights)
+    print('Outputs:')
+    print(outputs)
+
+    label = np.argmax(outputs)
+    probability = np.max(outputs)
+
+    return (label, probability)
 
 
 # mnist_train()
 # mnist_test()
-
-#test_images_path = './test-images/'
-
+#
+# test_images_path = './test-images/'
+#
 # for f in os.listdir(test_images_path):
-#    test_custom_image(test_images_path + f)
-
+#     test_custom_image(test_images_path + f)
+#
 # Print overall Network performance
-#score = np.asarray(network_score)
-#print("Performance:", score.sum() / score.size)
+# score = np.asarray(network_score)
+# print("Performance:", score.sum() / score.size)
+#
+# network_score = []
+#
+# mnist_test_with_weights()
+#
+# score = np.asarray(network_score)
+# print("Performance:", score.sum() / score.size)

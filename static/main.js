@@ -1,101 +1,52 @@
-var canvas = document.createElement('canvas')
-canvas.setAttribute('width', '150px')
-canvas.setAttribute('height', '150px')
-canvas.setAttribute('id', 'canvas')
+var board
+$(function(){
 
+    board = new DrawingBoard.Board('default-board', {
+        controls: [
+            // { Size: { type: 'dropdown' } },
+            { DrawingMode: {pencil:false, eraser:false, filler: false } },
+            { Navigation: {back: false, forward:false} },
+            'Download'
+        ],
+        size: 10,
+        webStorage: false,
+        enlargeYourContainer: true
+    })
 
-
-var responsetxt = document.createElement('textarea')
-responsetxt.style.color = '#3DF614'
-responsetxt.style.backgroundColor = '#000000'
-responsetxt.style.height = '150px'
-responsetxt.style.width = '150px'
-responsetxt.style.padding = '0px'
-responsetxt.style.border = '0'
-responsetxt.style.fontSize = '15px'
-responsetxt.readOnly = true
-
-
-var canvasDiv = document.getElementsByClassName('canvasDiv')[0]
-canvasDiv.appendChild(canvas)
-
-var responseDiv = document.getElementById('ans')
-responseDiv.appendChild(responsetxt)
-
-
-if(typeof G_vmlCanvasManager != 'undefined') {
-    canvas = G_vmlCanvasManager.initElement(canvas)
-}
-var context = canvas.getContext('2d')
-
-$('#canvas').mousedown(function(e){
-    var mouseX = e.pageX - this.offsetLeft
-    var mouseY = e.pageY - this.offsetTop
-		
-    paint = true
-    addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop)
-    redraw()
 })
-
-$('#canvas').mousemove(function(e){
-    if(paint){
-        addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true)
-        redraw()
-    }
-})
-
-$('#canvas').mouseup(function(e){
-    paint = false
-})
-
-$('#canvas').mouseleave(function(e){
-    paint = false
-})
-
-var clickX = new Array()
-var clickY = new Array()
-var clickDrag = new Array()
-var paint
-
-function addClick(x, y, dragging)
-{
-    clickX.push(x)
-    clickY.push(y)
-    clickDrag.push(dragging)
-}
-
-function redraw(){
-    context.clearRect(0, 0, context.canvas.width, context.canvas.height) // Clears the canvas
-  
-    context.strokeStyle = '#000'
-    context.lineJoin = 'round'
-    context.lineWidth = 5
-			
-    for(var i=0; i < clickX.length; i++) {		
-        context.beginPath()
-        if(clickDrag[i] && i){
-            context.moveTo(clickX[i-1], clickY[i-1])
-        }else{
-            context.moveTo(clickX[i]-1, clickY[i])
-        }
-        context.lineTo(clickX[i], clickY[i])
-        context.closePath()
-        context.stroke()
-    }
-}
 
 function sendNumber(){
-    var imgData = context.getImageData(0, 0, context.canvas.width, context.canvas.height)
+    var resizedCanvas = document.createElement('canvas')
+    resample_single(board.canvas, 28, 28, true, resizedCanvas)
+    var ctx = resizedCanvas.getContext('2d')
+    var imgData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height)
     var data = imgData.data
+    // console.log(data)
+
+    var grayscale_list =  []
+    for (var i = 0; i < data.length; i += 4) {
+        var avg = (data[i] + data[i + 1] + data[i + 2]) / 3
+        data[i] = avg // red
+        data[i + 1] = avg // green
+        data[i + 2] = avg // blue
+        grayscale_list.push(avg)
+    }
+
+    var img = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height).data
+
+    // console.log(grayscale_list)
+    // console.log(JSON.stringify(grayscale_list))
     
     $.ajax({
         url: '/predict-digit',
-        data: JSON.stringify(data),
+        data: JSON.stringify(grayscale_list),
         contentType: 'application/json; charset=utf-8',
         type: 'POST',
         success: function(response){
-            responsetxt.value = 'Your number is: '+ response['digit'] + '\\\rand the probabilities are: ' + response['prob']
             console.log(response['digit'] + ' ' + response['prob'])
+            console.log(response['img'])
+            console.log(response['img_real'])
+            $('#result').html('Prediction : <br><span class=\'digit\'>'+response['digit']+'</span></br> Probability : '+response['prob'])
         },
         error: function(e){
             console.log(e)
@@ -104,9 +55,83 @@ function sendNumber(){
     
 }
 
-$(function(){
-    $('#guess').on('click', function(){
-        sendNumber()
-    })
+function resample_single(canvas, width, height, resize_canvas, newCanvas) {
+    var width_source = canvas.width
+    var height_source = canvas.height
+    width = Math.round(width)
+    height = Math.round(height)
+
+    var ratio_w = width_source / width
+    var ratio_h = height_source / height
+    var ratio_w_half = Math.ceil(ratio_w / 2)
+    var ratio_h_half = Math.ceil(ratio_h / 2)
+
+    var ctx = canvas.getContext('2d')
+    var img = ctx.getImageData(0, 0, width_source, height_source)
+    var img2 = ctx.createImageData(width, height)
+    var data = img.data
+    var data2 = img2.data
+
+    for (var j = 0; j < height; j++) {
+        for (var i = 0; i < width; i++) {
+            var x2 = (i + j * width) * 4
+            var weight = 0
+            var weights = 0
+            var weights_alpha = 0
+            var gx_r = 0
+            var gx_g = 0
+            var gx_b = 0
+            var gx_a = 0
+            var center_y = (j + 0.5) * ratio_h
+            var yy_start = Math.floor(j * ratio_h)
+            var yy_stop = Math.ceil((j + 1) * ratio_h)
+            for (var yy = yy_start; yy < yy_stop; yy++) {
+                var dy = Math.abs(center_y - (yy + 0.5)) / ratio_h_half
+                var center_x = (i + 0.5) * ratio_w
+                var w0 = dy * dy //pre-calc part of w
+                var xx_start = Math.floor(i * ratio_w)
+                var xx_stop = Math.ceil((i + 1) * ratio_w)
+                for (var xx = xx_start; xx < xx_stop; xx++) {
+                    var dx = Math.abs(center_x - (xx + 0.5)) / ratio_w_half
+                    var w = Math.sqrt(w0 + dx * dx)
+                    if (w >= 1) {
+                        //pixel too far
+                        continue
+                    }
+                    //hermite filter
+                    weight = 2 * w * w * w - 3 * w * w + 1
+                    var pos_x = 4 * (xx + yy * width_source)
+                    //alpha
+                    gx_a += weight * data[pos_x + 3]
+                    weights_alpha += weight
+                    //colors
+                    if (data[pos_x + 3] < 255)
+                        weight = weight * data[pos_x + 3] / 250
+                    gx_r += weight * data[pos_x]
+                    gx_g += weight * data[pos_x + 1]
+                    gx_b += weight * data[pos_x + 2]
+                    weights += weight
+                }
+            }
+            data2[x2] = gx_r / weights
+            data2[x2 + 1] = gx_g / weights
+            data2[x2 + 2] = gx_b / weights
+            data2[x2 + 3] = gx_a / weights_alpha
+        }
+    }
+    //clear and resize canvas
+    if (resize_canvas === true) {
+        newCanvas.width = width
+        newCanvas.height = height
+    } else {
+        ctx.clearRect(0, 0, width_source, height_source)
+    }
+
+    //draw
+    newCanvas.getContext('2d').putImageData(img2, 0, 0)
+}
+
+$('#guess').on('click', function(){
+    sendNumber()
 })
 

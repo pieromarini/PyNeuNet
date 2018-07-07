@@ -27,7 +27,9 @@ def digit():
             weights = pickle.load(f)
 
         digit, prob = predict(img, weights)
-        data = {'digit': digit.item(), 'prob': prob.item()}
+        prob = "{0:.2f}".format(prob.item())
+
+        data = {'digit': digit.item(), 'prob': prob}
         return jsonify(data)
 
 

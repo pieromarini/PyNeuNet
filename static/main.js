@@ -1,12 +1,12 @@
 var board
+var outputContainer = '#response'
+
 $(function(){
 
     board = new DrawingBoard.Board('default-board', {
         controls: [
-            // { Size: { type: 'dropdown' } },
-            { DrawingMode: {pencil:false, eraser:false, filler: false } },
-            { Navigation: {back: false, forward:false} },
-            'Download'
+            { DrawingMode: { pencil:false, eraser:false, filler: false } },
+            { Navigation: { back: false, forward:false } },
         ],
         size: 10,
         webStorage: false,
@@ -32,7 +32,7 @@ function sendNumber(){
         grayscale_list.push(avg)
     }
 
-    var img = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height).data
+    // var img = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height).data
 
     // console.log(grayscale_list)
     // console.log(JSON.stringify(grayscale_list))
@@ -46,7 +46,12 @@ function sendNumber(){
             console.log(response['digit'] + ' ' + response['prob'])
             console.log(response['img'])
             console.log(response['img_real'])
-            $('#result').html('Prediction : <br><span class=\'digit\'>'+response['digit']+'</span></br> Probability : '+response['prob'])
+            $(outputContainer).html('<span class=\'digit\'>' + 
+                                    response['digit'] +
+                                    '</span> <br>Probability: ' + 
+                                    '<span class=\'prob\'>' + 
+                                    response['prob'] +
+                                    '</span>')
         },
         error: function(e){
             console.log(e)

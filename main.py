@@ -1,5 +1,5 @@
 import numpy as np
-import os
+# import os
 import matplotlib.pyplot as plt
 import scipy.misc
 from neuralnetwork import NeuralNetwork
